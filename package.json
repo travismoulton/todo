@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,8 @@
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.22",
     "eslint": "^8.4.1",
     "eslint-config-airbnb": "^19.0.2",
     "eslint-config-prettier": "^8.3.0",
