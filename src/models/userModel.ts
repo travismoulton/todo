@@ -23,11 +23,11 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
   }
 );
 
-userSchema.virtual('todos', {
-  ref: 'Todo',
-  foreignField: 'user',
-  localField: '_id',
-});
+// userSchema.virtual('todos', {
+//   ref: 'Todo',
+//   foreignField: 'user',
+//   localField: '_id',
+// });
 
 userSchema.methods.correctPassword = async function (givenPassword, userPassword) {
   return await bcrypt.compare(givenPassword, userPassword);

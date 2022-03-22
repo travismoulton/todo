@@ -12,11 +12,11 @@ const userSchema = new mongoose_1.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
 });
-userSchema.virtual('todos', {
-    ref: 'Todo',
-    foreignField: 'user',
-    localField: '_id',
-});
+// userSchema.virtual('todos', {
+//   ref: 'Todo',
+//   foreignField: 'user',
+//   localField: '_id',
+// });
 userSchema.methods.correctPassword = async function (givenPassword, userPassword) {
     return await bcryptjs_1.default.compare(givenPassword, userPassword);
 };
