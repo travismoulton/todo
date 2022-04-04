@@ -5,6 +5,8 @@ import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import cors from 'cors';
 
+import userRouter from './routes/userRoutes';
+
 const app = express();
 
 app.use(
@@ -28,5 +30,7 @@ app.use(mongoSanitize());
 app.use(xss());
 
 app.use(express.json());
+
+app.use('/users', userRouter);
 
 export default app;

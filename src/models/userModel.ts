@@ -1,18 +1,20 @@
 import { Schema, Model, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-interface IUser {
+// interface IUserMethods {
+//   correctPassword: (givenPassword: string) => Promise<boolean>;
+// }
+
+export interface IUser {
+  _id: string;
   name: string;
   password: string;
+  correctPassword: (givenPassword: string) => Promise<boolean>;
 }
 
-interface IUserMethods {
-  correctPassword: (givenPassword: string, userPassword: string) => Promise<boolean>;
-}
+// export interface UserModel extends Model<IUser, {}, IUserMethods> {}
 
-interface UserModel extends Model<IUser, {}, IUserMethods> {}
-
-const userSchema = new Schema<IUser, UserModel, IUserMethods>(
+const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: [true, 'Username required'], unique: true },
     password: { type: String, required: [true, 'Password required'] },
@@ -29,9 +31,18 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
 //   localField: '_id',
 // });
 
-userSchema.methods.correctPassword = async function (givenPassword, userPassword) {
-  return await bcrypt.compare(givenPassword, userPassword);
-};
+// Hash password upon user creation and password update
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 12);
+
+  next();
+});
+
+userSchema.method('correctPassword', async function (givenPassword) {
+  return await bcrypt.compare(givenPassword, this.password);
+});
 
 const User = model<IUser>('User', userSchema);
 

@@ -9,6 +9,7 @@ interface ITodo {
   createdAt: Date;
   priority?: ['1', '2', '3'];
   user: Types.ObjectId;
+  _id: string;
 }
 
 const todoSchema = new Schema<ITodo>({
@@ -22,6 +23,6 @@ const todoSchema = new Schema<ITodo>({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
-const Todo = model('Todo', todoSchema);
+const Todo = model<ITodo>('Todo', todoSchema);
 
 export default Todo;
