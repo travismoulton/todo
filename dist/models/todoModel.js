@@ -8,7 +8,7 @@ const todoSchema = new mongoose_1.Schema({
     category: String,
     isFinished: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
-    priority: { type: Number, enum: ['1', '2', '3'] },
+    priority: { type: String, enum: ['1', '2', '3'] },
     user: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User' },
 });
 const Todo = (0, mongoose_1.model)('Todo', todoSchema);

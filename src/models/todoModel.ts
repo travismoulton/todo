@@ -1,6 +1,6 @@
 import { Schema, model, Types } from 'mongoose';
 
-interface ITodo {
+export interface ITodo {
   title?: string;
   content: string;
   dueDate?: Date;
@@ -19,7 +19,7 @@ const todoSchema = new Schema<ITodo>({
   category: String,
   isFinished: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
-  priority: { type: Number, enum: ['1', '2', '3'] },
+  priority: { type: String, enum: ['1', '2', '3'] },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 

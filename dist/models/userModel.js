@@ -8,7 +8,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 // export interface UserModel extends Model<IUser, {}, IUserMethods> {}
 const userSchema = new mongoose_1.Schema({
     name: { type: String, required: [true, 'Username required'], unique: true },
-    password: { type: String, required: [true, 'Password required'] },
+    password: { type: String, required: [true, 'Password required'], select: false },
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
@@ -18,7 +18,7 @@ const userSchema = new mongoose_1.Schema({
 //   foreignField: 'user',
 //   localField: '_id',
 // });
-// Hash password upon user creation and password update
+// Hash password when the user is created
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password'))
         return next();

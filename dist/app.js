@@ -10,6 +10,7 @@ const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize
 const xss_clean_1 = __importDefault(require("xss-clean"));
 const cors_1 = __importDefault(require("cors"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const todoRoutes_1 = __importDefault(require("./routes/todoRoutes"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: ['put origin here'],
@@ -27,4 +28,5 @@ app.use((0, express_mongo_sanitize_1.default)());
 app.use((0, xss_clean_1.default)());
 app.use(express_1.default.json());
 app.use('/users', userRoutes_1.default);
+app.use('/todos', todoRoutes_1.default);
 exports.default = app;

@@ -1,4 +1,4 @@
-import { Schema, Model, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 // interface IUserMethods {
@@ -17,7 +17,7 @@ export interface IUser {
 const userSchema = new Schema<IUser>(
   {
     name: { type: String, required: [true, 'Username required'], unique: true },
-    password: { type: String, required: [true, 'Password required'] },
+    password: { type: String, required: [true, 'Password required'], select: false },
   },
   {
     toJSON: { virtuals: true },

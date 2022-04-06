@@ -12,7 +12,7 @@ dotenv.config({ path: './config.env' });
 const { JWT_EXPIRES_IN, JWT_SECRET } = process.env;
 
 function signToken(id: string) {
-  jwt.sign({ id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign({ id }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 function createAndSendToken(
@@ -125,6 +125,8 @@ export const protectRoute = catchAsync(
     }
 
     req.user = currentUser;
+
+    next();
   }
 );
 

@@ -6,6 +6,7 @@ import xss from 'xss-clean';
 import cors from 'cors';
 
 import userRouter from './routes/userRoutes';
+import todoRouter from './routes/todoRoutes';
 
 const app = express();
 
@@ -32,5 +33,6 @@ app.use(xss());
 app.use(express.json());
 
 app.use('/users', userRouter);
+app.use('/todos', todoRouter);
 
 export default app;
