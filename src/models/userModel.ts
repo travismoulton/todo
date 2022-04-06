@@ -31,7 +31,7 @@ const userSchema = new Schema<IUser>(
 //   localField: '_id',
 // });
 
-// Hash password upon user creation and password update
+// Hash password when the user is created
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
