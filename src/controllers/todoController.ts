@@ -25,7 +25,7 @@ export const getTodoById = catchAsync(
 );
 
 export const getTodosByUser = catchAsync(
-  async (req: CustomRequest, res: Response, next: NextFunction) => {
+  async (req: CustomRequest, res: Response, _next: NextFunction) => {
     // If any query paramaters are passed in, filter them
     const todos = await Todo.find({ user: req.user, ...req.query });
 
