@@ -5,7 +5,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import CustomRequest from '../../request';
 import User, { IUser } from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
-import sendErrorJson from './sendErrorJson';
+import sendErrorJson from '../utils/sendErrorJson';
 
 dotenv.config({ path: './config.env' });
 
