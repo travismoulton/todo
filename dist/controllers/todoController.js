@@ -17,7 +17,7 @@ exports.getTodoById = (0, catchAsync_1.default)(async (req, res, next) => {
         return next((0, sendErrorJson_1.default)(res, 'No todo found with that id', 400));
     res.status(200).json({ status: 'success', data: todo });
 });
-exports.getTodosByUser = (0, catchAsync_1.default)(async (req, res, next) => {
+exports.getTodosByUser = (0, catchAsync_1.default)(async (req, res, _next) => {
     // If any query paramaters are passed in, filter them
     const todos = await todoModel_1.default.find({ user: req.user, ...req.query });
     res.status(200).json({ status: 'success', data: todos });

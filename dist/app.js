@@ -13,7 +13,7 @@ const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const todoRoutes_1 = __importDefault(require("./routes/todoRoutes"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ['put origin here'],
+    origin: 'http://localhost:3000',
     credentials: true,
     exposedHeaders: ['Set-Cookie'],
 }));
