@@ -20,7 +20,7 @@ function createAndSendToken(user, statusCode, _req, res) {
     res.cookie('jwt', token, {
         expires: new Date(Date.now() + ninetyDays),
         httpOnly: true,
-        // secure: true,
+        secure: true,
         sameSite: 'none',
     });
     // remove password from output
@@ -36,7 +36,7 @@ exports.signup = (0, catchAsync_1.default)(async (req, res, _next) => {
     // Will return an array if one user if found
     const existingUser = await userModel_1.default.find({ name: { $eq: name } });
     if (existingUser.length)
-        return (0, sendErrorJson_1.default)(res, 'That email is already taken', 401);
+        return (0, sendErrorJson_1.default)(res, 'That email is already taken', 400);
     if (password.length < 8)
         return (0, sendErrorJson_1.default)(res, 'Password must be at least 8 charachters', 400);
     const newUser = await userModel_1.default.create({ name, password });
@@ -72,8 +72,10 @@ exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
         : tokenIsCookie
             ? req.cookies.jwt
             : null;
+    console.log({ token });
+    console.log(req.cookies);
     if (!token) {
-        return next((0, sendErrorJson_1.default)(res, 'You are not logged in! Please log in to get access', 401));
+        return (0, sendErrorJson_1.default)(res, 'You are not logged in! Please log in to get access', 401);
     }
     // Verify the token
     const decodedToken = jsonwebtoken_1.default.verify(token, JWT_SECRET);
@@ -83,6 +85,7 @@ exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
         return next((0, sendErrorJson_1.default)(res, 'The user belonging to this token no longer exists', 401));
     }
     req.user = currentUser;
+    console.log(req.user);
     next();
 });
 exports.checkIfUserIsLoggedIn = (0, catchAsync_1.default)(async (req, res, _next) => {

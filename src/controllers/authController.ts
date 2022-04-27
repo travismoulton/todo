@@ -26,7 +26,7 @@ function createAndSendToken(
   res.cookie('jwt', token, {
     expires: new Date(Date.now() + ninetyDays),
     httpOnly: true,
-    // secure: true,
+    secure: true,
     sameSite: 'none',
   });
 
@@ -53,7 +53,7 @@ export const signup = catchAsync(
     const existingUser = await User.find({ name: { $eq: name } });
 
     if (existingUser.length)
-      return sendErrorJson(res, 'That email is already taken', 401);
+      return sendErrorJson(res, 'That email is already taken', 400);
 
     if (password.length < 8)
       return sendErrorJson(res, 'Password must be at least 8 charachters', 400);
@@ -106,9 +106,14 @@ export const protectRoute = catchAsync(
       ? req.cookies.jwt
       : null;
 
+    console.log({ token });
+    console.log(req.cookies);
+
     if (!token) {
-      return next(
-        sendErrorJson(res, 'You are not logged in! Please log in to get access', 401)
+      return sendErrorJson(
+        res,
+        'You are not logged in! Please log in to get access',
+        401
       );
     }
 
@@ -125,6 +130,8 @@ export const protectRoute = catchAsync(
     }
 
     req.user = currentUser;
+
+    console.log(req.user);
 
     next();
   }
