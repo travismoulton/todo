@@ -6,6 +6,7 @@ const authController_1 = require("../controllers/authController");
 const router = (0, express_1.Router)();
 router.post('/', authController_1.protectRoute, todoController_1.createTodo);
 router.get('/', authController_1.protectRoute, todoController_1.getTodosByUser);
+router.get('/due-today', authController_1.protectRoute, todoController_1.getTodosDueToday);
 router
     .route('/:id')
     .get(authController_1.protectRoute, todoController_1.getTodoById)

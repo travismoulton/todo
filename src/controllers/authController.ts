@@ -106,9 +106,6 @@ export const protectRoute = catchAsync(
       ? req.cookies.jwt
       : null;
 
-    console.log({ token });
-    console.log(req.cookies);
-
     if (!token) {
       return sendErrorJson(
         res,
@@ -131,8 +128,6 @@ export const protectRoute = catchAsync(
 
     req.user = currentUser;
 
-    console.log(req.user);
-
     next();
   }
 );
@@ -141,9 +136,8 @@ export const checkIfUserIsLoggedIn = catchAsync(
   async (req: CustomRequest, res: Response, _next: NextFunction) => {
     const token: string | undefined = req.cookies?.jwt;
 
-    console.log(token);
-
-    const sendNoUserResponse = () => res.status(204).json({ status: 'No user found' });
+    const sendNoUserResponse = () =>
+      res.status(204).json({ status: 'fail', data: { message: 'No user found' } });
 
     if (token && token !== 'loggedout') {
       // Verify the token

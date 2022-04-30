@@ -72,8 +72,6 @@ exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
         : tokenIsCookie
             ? req.cookies.jwt
             : null;
-    console.log({ token });
-    console.log(req.cookies);
     if (!token) {
         return (0, sendErrorJson_1.default)(res, 'You are not logged in! Please log in to get access', 401);
     }
@@ -85,14 +83,12 @@ exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
         return next((0, sendErrorJson_1.default)(res, 'The user belonging to this token no longer exists', 401));
     }
     req.user = currentUser;
-    console.log(req.user);
     next();
 });
 exports.checkIfUserIsLoggedIn = (0, catchAsync_1.default)(async (req, res, _next) => {
     var _a;
     const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.jwt;
-    console.log(token);
-    const sendNoUserResponse = () => res.status(204).json({ status: 'No user found' });
+    const sendNoUserResponse = () => res.status(204).json({ status: 'fail', data: { message: 'No user found' } });
     if (token && token !== 'loggedout') {
         // Verify the token
         const decodedToken = jsonwebtoken_1.default.verify(token, JWT_SECRET);
