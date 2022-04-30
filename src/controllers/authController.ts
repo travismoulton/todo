@@ -141,9 +141,11 @@ export const checkIfUserIsLoggedIn = catchAsync(
   async (req: CustomRequest, res: Response, _next: NextFunction) => {
     const token: string | undefined = req.cookies?.jwt;
 
+    console.log(token);
+
     const sendNoUserResponse = () => res.status(204).json({ status: 'No user found' });
 
-    if (token && token === 'loggedout') {
+    if (token && token !== 'loggedout') {
       // Verify the token
       const decodedToken = jwt.verify(token, JWT_SECRET) as JwtPayload;
 

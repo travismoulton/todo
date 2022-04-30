@@ -91,8 +91,9 @@ exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
 exports.checkIfUserIsLoggedIn = (0, catchAsync_1.default)(async (req, res, _next) => {
     var _a;
     const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.jwt;
+    console.log(token);
     const sendNoUserResponse = () => res.status(204).json({ status: 'No user found' });
-    if (token && token === 'loggedout') {
+    if (token && token !== 'loggedout') {
         // Verify the token
         const decodedToken = jsonwebtoken_1.default.verify(token, JWT_SECRET);
         const currentUser = await userModel_1.default.findById(decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken.id);
