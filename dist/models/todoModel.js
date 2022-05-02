@@ -4,7 +4,8 @@ const mongoose_1 = require("mongoose");
 const todoSchema = new mongoose_1.Schema({
     title: { type: String, maxlength: [30, 'Title must be less than 30 characters'] },
     content: { type: String, required: [true, 'Todo content may not be empty'] },
-    dueDate: String,
+    dueDateStr: String,
+    dueDate: Date,
     category: String,
     isFinished: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },

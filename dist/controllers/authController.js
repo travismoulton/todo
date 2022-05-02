@@ -53,15 +53,14 @@ exports.login = (0, catchAsync_1.default)(async (req, res, next) => {
         return (0, sendErrorJson_1.default)(res, 'Incorrect name or password', 401);
     createAndSendToken(user, 200, req, res);
 });
-const logout = (_req, res) => {
+exports.logout = (0, catchAsync_1.default)(async (_req, res) => {
     res.cookie('jwt', 'loggedout', {
         expires: new Date(Date.now() + 10 * 1000),
         httpOnly: true,
         // secure: true
     });
     res.status(200).json({ status: 'success' });
-};
-exports.logout = logout;
+});
 exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
     var _a, _b, _c;
     // Check for to see if bearer token or jwt exist
@@ -96,7 +95,7 @@ exports.checkIfUserIsLoggedIn = (0, catchAsync_1.default)(async (req, res, _next
         if (!currentUser)
             sendNoUserResponse();
         // All checks passed
-        res.status(200).json({ status: 'Success', data: { user: currentUser } });
+        res.status(200).json({ status: 'success', data: { user: currentUser } });
     }
     else {
         sendNoUserResponse();

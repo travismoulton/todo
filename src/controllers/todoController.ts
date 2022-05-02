@@ -65,10 +65,24 @@ export const updateTodo = catchAsync(
 export const getTodosDueToday = catchAsync(async (req: CustomRequest, res: Response) => {
   const today = new Date();
   const todayDateStr = [today.getFullYear(), today.getMonth(), today.getDate()].join('-');
-  console.log(todayDateStr);
-  const todos = await Todo.find({ user: req.user, dueDate: { $eq: todayDateStr } });
 
-  console.log(todos);
+  const todos = await Todo.find({
+    user: req.user,
+    dueDateStr: { $eq: todayDateStr },
+    isFinished: { $eq: false },
+  });
+
+  res.status(200).json({ status: 'success', data: todos });
+});
+
+export const getOverdueTodos = catchAsync(async (req: CustomRequest, res: Response) => {
+  const today = new Date();
+
+  const todos = await Todo.find({
+    user: req.user,
+    dueDate: { $lt: new Date() },
+    isFinished: { $eq: false },
+  });
 
   res.status(200).json({ status: 'success', data: todos });
 });

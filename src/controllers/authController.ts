@@ -83,7 +83,7 @@ export const login = catchAsync(
   }
 );
 
-export const logout = (_req: Request, res: Response) => {
+export const logout = catchAsync(async (_req: Request, res: Response) => {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -91,7 +91,7 @@ export const logout = (_req: Request, res: Response) => {
   });
 
   res.status(200).json({ status: 'success' });
-};
+});
 
 export const protectRoute = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -147,7 +147,7 @@ export const checkIfUserIsLoggedIn = catchAsync(
       if (!currentUser) sendNoUserResponse();
 
       // All checks passed
-      res.status(200).json({ status: 'Success', data: { user: currentUser } });
+      res.status(200).json({ status: 'success', data: { user: currentUser } });
     } else {
       sendNoUserResponse();
     }
