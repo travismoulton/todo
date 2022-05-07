@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import userRouter from './routes/userRoutes';
 import todoRouter from './routes/todoRoutes';
@@ -12,11 +13,13 @@ const app = express();
 
 app.use(
   cors({
-    origin: ['put origin here'],
+    origin: 'http://localhost:3000',
     credentials: true,
     exposedHeaders: ['Set-Cookie'],
   })
 );
+
+app.use(cookieParser());
 
 // Development logging
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));

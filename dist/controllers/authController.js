@@ -20,7 +20,7 @@ function createAndSendToken(user, statusCode, _req, res) {
     res.cookie('jwt', token, {
         expires: new Date(Date.now() + ninetyDays),
         httpOnly: true,
-        // secure: true,
+        secure: true,
         sameSite: 'none',
     });
     // remove password from output
@@ -36,7 +36,7 @@ exports.signup = (0, catchAsync_1.default)(async (req, res, _next) => {
     // Will return an array if one user if found
     const existingUser = await userModel_1.default.find({ name: { $eq: name } });
     if (existingUser.length)
-        return (0, sendErrorJson_1.default)(res, 'That email is already taken', 401);
+        return (0, sendErrorJson_1.default)(res, 'That email is already taken', 400);
     if (password.length < 8)
         return (0, sendErrorJson_1.default)(res, 'Password must be at least 8 charachters', 400);
     const newUser = await userModel_1.default.create({ name, password });
@@ -53,15 +53,14 @@ exports.login = (0, catchAsync_1.default)(async (req, res, next) => {
         return (0, sendErrorJson_1.default)(res, 'Incorrect name or password', 401);
     createAndSendToken(user, 200, req, res);
 });
-const logout = (_req, res) => {
+exports.logout = (0, catchAsync_1.default)(async (_req, res) => {
     res.cookie('jwt', 'loggedout', {
         expires: new Date(Date.now() + 10 * 1000),
         httpOnly: true,
         // secure: true
     });
     res.status(200).json({ status: 'success' });
-};
-exports.logout = logout;
+});
 exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
     var _a, _b, _c;
     // Check for to see if bearer token or jwt exist
@@ -73,7 +72,7 @@ exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
             ? req.cookies.jwt
             : null;
     if (!token) {
-        return next((0, sendErrorJson_1.default)(res, 'You are not logged in! Please log in to get access', 401));
+        return (0, sendErrorJson_1.default)(res, 'You are not logged in! Please log in to get access', 401);
     }
     // Verify the token
     const decodedToken = jsonwebtoken_1.default.verify(token, JWT_SECRET);
@@ -88,15 +87,15 @@ exports.protectRoute = (0, catchAsync_1.default)(async (req, res, next) => {
 exports.checkIfUserIsLoggedIn = (0, catchAsync_1.default)(async (req, res, _next) => {
     var _a;
     const token = (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.jwt;
-    const sendNoUserResponse = () => res.status(204).json({ status: 'No user found' });
-    if (token && token === 'loggedout') {
+    const sendNoUserResponse = () => res.status(204).json({ status: 'fail', data: { message: 'No user found' } });
+    if (token && token !== 'loggedout') {
         // Verify the token
         const decodedToken = jsonwebtoken_1.default.verify(token, JWT_SECRET);
         const currentUser = await userModel_1.default.findById(decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken.id);
         if (!currentUser)
             sendNoUserResponse();
         // All checks passed
-        res.status(200).json({ status: 'Success', data: { user: currentUser } });
+        res.status(200).json({ status: 'success', data: { user: currentUser } });
     }
     else {
         sendNoUserResponse();

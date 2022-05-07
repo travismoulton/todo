@@ -9,14 +9,16 @@ const helmet_1 = __importDefault(require("helmet"));
 const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
 const xss_clean_1 = __importDefault(require("xss-clean"));
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const todoRoutes_1 = __importDefault(require("./routes/todoRoutes"));
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ['put origin here'],
+    origin: 'http://localhost:3000',
     credentials: true,
     exposedHeaders: ['Set-Cookie'],
 }));
+app.use((0, cookie_parser_1.default)());
 // Development logging
 if (process.env.NODE_ENV === 'development')
     app.use((0, morgan_1.default)('dev'));

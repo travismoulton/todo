@@ -61,3 +61,29 @@ export const updateTodo = catchAsync(
     res.status(200).json({ status: 'success', data: todo });
   }
 );
+
+export const getTodosDueToday = catchAsync(async (req: CustomRequest, res: Response) => {
+  const today = new Date();
+  const todayDateStr = +[today.getFullYear(), today.getMonth(), today.getDate()].join('');
+
+  const todos = await Todo.find({
+    user: req.user,
+    dueDateStr: { $eq: todayDateStr },
+    isFinished: { $eq: false },
+  });
+
+  res.status(200).json({ status: 'success', data: todos });
+});
+
+export const getOverdueTodos = catchAsync(async (req: CustomRequest, res: Response) => {
+  const today = new Date();
+  const todayDateStr = +today.toISOString().substring(0, 10).split('-').join('');
+
+  const todos = await Todo.find({
+    user: req.user,
+    dueDateStr: { $lt: todayDateStr },
+    isFinished: { $eq: false },
+  });
+
+  res.status(200).json({ status: 'success', data: todos });
+});

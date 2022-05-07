@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateTodo = exports.deleteTodo = exports.getTodosByUser = exports.getTodoById = exports.createTodo = void 0;
+exports.getOverdueTodos = exports.getTodosDueToday = exports.updateTodo = exports.deleteTodo = exports.getTodosByUser = exports.getTodoById = exports.createTodo = void 0;
 const catchAsync_1 = __importDefault(require("../utils/catchAsync"));
 const sendErrorJson_1 = __importDefault(require("../utils/sendErrorJson"));
 const todoModel_1 = __importDefault(require("../models/todoModel"));
@@ -39,4 +39,24 @@ exports.updateTodo = (0, catchAsync_1.default)(async (req, res, next) => {
     if (!todo)
         return next((0, sendErrorJson_1.default)(res, 'No todo with that ID exists', 401));
     res.status(200).json({ status: 'success', data: todo });
+});
+exports.getTodosDueToday = (0, catchAsync_1.default)(async (req, res) => {
+    const today = new Date();
+    const todayDateStr = +[today.getFullYear(), today.getMonth(), today.getDate()].join('');
+    const todos = await todoModel_1.default.find({
+        user: req.user,
+        dueDateStr: { $eq: todayDateStr },
+        isFinished: { $eq: false },
+    });
+    res.status(200).json({ status: 'success', data: todos });
+});
+exports.getOverdueTodos = (0, catchAsync_1.default)(async (req, res) => {
+    const today = new Date();
+    const todayDateStr = +today.toISOString().substring(0, 10).split('-').join('');
+    const todos = await todoModel_1.default.find({
+        user: req.user,
+        dueDateStr: { $lt: todayDateStr },
+        isFinished: { $eq: false },
+    });
+    res.status(200).json({ status: 'success', data: todos });
 });

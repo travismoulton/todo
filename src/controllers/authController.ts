@@ -26,7 +26,7 @@ function createAndSendToken(
   res.cookie('jwt', token, {
     expires: new Date(Date.now() + ninetyDays),
     httpOnly: true,
-    // secure: true,
+    secure: true,
     sameSite: 'none',
   });
 
@@ -53,7 +53,7 @@ export const signup = catchAsync(
     const existingUser = await User.find({ name: { $eq: name } });
 
     if (existingUser.length)
-      return sendErrorJson(res, 'That email is already taken', 401);
+      return sendErrorJson(res, 'That email is already taken', 400);
 
     if (password.length < 8)
       return sendErrorJson(res, 'Password must be at least 8 charachters', 400);
@@ -83,7 +83,7 @@ export const login = catchAsync(
   }
 );
 
-export const logout = (_req: Request, res: Response) => {
+export const logout = catchAsync(async (_req: Request, res: Response) => {
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -91,7 +91,7 @@ export const logout = (_req: Request, res: Response) => {
   });
 
   res.status(200).json({ status: 'success' });
-};
+});
 
 export const protectRoute = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -107,8 +107,10 @@ export const protectRoute = catchAsync(
       : null;
 
     if (!token) {
-      return next(
-        sendErrorJson(res, 'You are not logged in! Please log in to get access', 401)
+      return sendErrorJson(
+        res,
+        'You are not logged in! Please log in to get access',
+        401
       );
     }
 
@@ -134,9 +136,10 @@ export const checkIfUserIsLoggedIn = catchAsync(
   async (req: CustomRequest, res: Response, _next: NextFunction) => {
     const token: string | undefined = req.cookies?.jwt;
 
-    const sendNoUserResponse = () => res.status(204).json({ status: 'No user found' });
+    const sendNoUserResponse = () =>
+      res.status(204).json({ status: 'fail', data: { message: 'No user found' } });
 
-    if (token && token === 'loggedout') {
+    if (token && token !== 'loggedout') {
       // Verify the token
       const decodedToken = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
@@ -144,7 +147,7 @@ export const checkIfUserIsLoggedIn = catchAsync(
       if (!currentUser) sendNoUserResponse();
 
       // All checks passed
-      res.status(200).json({ status: 'Success', data: { user: currentUser } });
+      res.status(200).json({ status: 'success', data: { user: currentUser } });
     } else {
       sendNoUserResponse();
     }
