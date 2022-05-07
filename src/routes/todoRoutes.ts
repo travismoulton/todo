@@ -7,6 +7,7 @@ import {
   getTodoById,
   updateTodo,
   getTodosDueToday,
+  getOverdueTodos,
 } from '../controllers/todoController';
 import { protectRoute } from '../controllers/authController';
 
@@ -17,6 +18,8 @@ router.post('/', protectRoute, createTodo);
 router.get('/', protectRoute, getTodosByUser);
 
 router.get('/due-today', protectRoute, getTodosDueToday);
+
+router.get('/overdue', protectRoute, getOverdueTodos);
 
 router
   .route('/:id')

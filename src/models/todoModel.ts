@@ -3,7 +3,7 @@ import { Schema, model, Types } from 'mongoose';
 export interface ITodo {
   title?: string;
   content: string;
-  dueDateStr?: string;
+  dueDateStr?: number;
   dueDate: Date;
   category?: string;
   isFinished: boolean;
@@ -16,7 +16,7 @@ export interface ITodo {
 const todoSchema = new Schema<ITodo>({
   title: { type: String, maxlength: [30, 'Title must be less than 30 characters'] },
   content: { type: String, required: [true, 'Todo content may not be empty'] },
-  dueDateStr: String,
+  dueDateStr: Number,
   dueDate: Date,
   category: String,
   isFinished: { type: Boolean, default: false },
