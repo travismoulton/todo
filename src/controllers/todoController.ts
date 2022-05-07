@@ -64,7 +64,7 @@ export const updateTodo = catchAsync(
 
 export const getTodosDueToday = catchAsync(async (req: CustomRequest, res: Response) => {
   const today = new Date();
-  const todayDateStr = +[today.getFullYear(), today.getMonth(), today.getDate()].join('');
+  const todayDateStr = +today.toISOString().substring(0, 10).split('-').join('');
 
   const todos = await Todo.find({
     user: req.user,
